@@ -58,7 +58,7 @@ Args:
         self.max_duty = 1
 
         if GPIO.getmode() is None:
-            GPIO.setmode(GPIO.BOARD)
+            GPIO.setmode(GPIO.BCM)
 
         self._pins = []
         for pin in self.pins:  # Set motor pins as outputs

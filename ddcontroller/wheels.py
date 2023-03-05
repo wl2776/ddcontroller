@@ -25,11 +25,12 @@ from collections import deque
 from . import motor
 from simple_pid import PID
 
+
 class DummyEncoder:
     def __init__(self):
         self.resolution = 1
 
-    def read_position():
+    def read_position(self):
         return 0
 
 try:
@@ -172,28 +173,22 @@ Args:
         self.rpm = self.motor.rpm * self.pulley_ratio
         self.max_angular_velocity = (self.rpm/60)*(np.pi*2)
 
-        # create target angular velocity
         self.target_angular_velocity = 0
 
-        # stores raw encoder 'ticks'
         self.position = self.encoder.read_position()
 
-        # stores age of data
         self.timestamp = time.monotonic_ns()
         self.target_velocity = 0
         self.angular_velocity = 0
         self.linear_velocity = 0
 
-        # limit for rollover
         self.rollover_limit = self.pulley_ratio * self.encoder.resolution
 
-        # create fifo queue object for wheel positions
         self._positions = deque([self.position, self.encoder.read_position()], maxlen=2)
 
-        # create fifo queue object for wheel positions timestamps
         self._timestamps = deque([time.monotonic_ns()] * 2, maxlen=2)
 
-        self.update()  # update values in object
+        self.update()
 
     def update(self):
         """Update the encoder position and timestamp.
@@ -262,6 +257,7 @@ time between measurements.
 Returns:
         float: The current linear velocity of the wheel.
         """
+
         distance = self.get_travel()
         delta_time = (self._timestamps[1] - self._timestamps[0]) / 1e9
         self.linear_velocity = distance / delta_time

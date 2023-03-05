@@ -294,17 +294,14 @@ Args:
 
         self.target_angular_velocity = angular_velocity
 
-        if not self.closed_loop:
-            # Open loop control
-            duty = ((-self.motor.max_duty) / (-self.max_angular_velocity)) * \
-                    self.target_angular_velocity
-
-        elif self.closed_loop:
-            # Closed loop PID control
+        if self.closed_loop:
             self.pid.setpoint = self.target_angular_velocity
             duty = self.pid(self.get_angular_velocity())
+        else:
+            # Open loop control
+            duty = (-self.motor.max_duty / -self.max_angular_velocity) * \
+                    self.target_angular_velocity
 
-        # set duty cycle to motor
         self.motor.set_duty(duty)
 
     def stop(self):

@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 '''
-This file is part of the ddcontroller library (https://github.com/ansarid/ddcontroller).
+This file is part of the ddcontroller library
+(https://github.com/ansarid/ddcontroller).
+
 Copyright (C) 2022  Daniyal Ansari
 
 This program is free software: you can redistribute it and/or modify
@@ -24,48 +26,41 @@ GPIO.setwarnings(False)
 class Motor:
     """Class for controlling a motor using the Raspberry Pi's GPIO pins.
 
-    Args:
-        pins (list): A list of the GPIO pins that will be used to control the motor.
-        pwm_frequency (int): The frequency of the pulse width modulation (PWM) signal
-            that will be used to control the motor.
-        initial_duty (int, optional): The initial duty cycle of the PWM signal. Defaults to 0.
-        decay_mode (str, optional): The decay mode of the motor. Can be either "FAST" or
-            "SLOW". Defaults to "FAST".
-        invert (bool, optional): A boolean value indicating whether the motor's direction
-            should be reversed. Defaults to False.
-        rpm (int, optional): The speed of the motor in rotations per minute. Defaults to 200.
-    """
+Args:
+  pins (list): A list of the GPIO pins that will be used to control the motor.
 
-    def __init__(self, pins, pwm_frequency, initial_duty=0, decay_mode='FAST', invert=False, rpm=200):
+  pwm_frequency (int): The frequency of the pulse width modulation (PWM)
+    signal in Hz that will be used to control the motor.
+
+  initial_duty (int, optional): The initial duty cycle of the PWM signal in percent.
+    Defaults to 0.
+
+  decay_mode (str, optional): The decay mode of the motor.
+    Can be either "FAST" or "SLOW". Defaults to "FAST".
+
+  invert (bool, optional): A boolean value indicating whether the motor's
+    direction should be reversed. Defaults to False.
+
+  rpm (int, optional): The speed of the motor in rotations per minute.
+     Defaults to 200.  """
+
+    def __init__(self, pins, pwm_frequency, initial_duty=0, decay_mode='FAST',
+                 invert=False, rpm=200):
+
         self.pins = pins
-        self._pins = []
-
-        # Initial Duty %
         self.duty = initial_duty
-
-        # PWM frequency (Hz)
         self.pwm_frequency = pwm_frequency
-
-        # Decay Mode (FAST/SLOW)
         self.decay_mode = decay_mode
-
-        # Reverse motor direction
         self.invert = invert
-
-        # Motor RPM
         self.rpm = rpm
 
-        # Min motor Duty
         self.min_duty = 0
-
-        # Max motor Duty
         self.max_duty = 1
 
         if GPIO.getmode() is None:
             GPIO.setmode(GPIO.BOARD)
-        else:
-            pass
 
+        self._pins = []
         for pin in self.pins:  # Set motor pins as outputs
             GPIO.setup(pin, GPIO.OUT)
             self._pins.append(GPIO.PWM(pin, self.pwm_frequency))

@@ -30,8 +30,7 @@ install_requires = [
                     'numpy',
                     'smbus2',
                     'ruamel.yaml',
-                    'simple-pid',
-                    # 'as5048b'
+                    'simple-pid'
                    ]
 
 setuptools.setup(
@@ -46,10 +45,10 @@ setuptools.setup(
     long_description_content_type='text/markdown'
 )
 
-if os.path.exists('/opt/ddcontroller'):
-    pass
-else:
+if not os.path.exists('/opt/ddcontroller'):
     os.mkdir('/opt/ddcontroller')
+
+if not os.path.exists('/opt/ddcontroller/config'):
     os.mkdir('/opt/ddcontroller/config')
 
 if os.path.exists('/opt/ddcontroller/config/default.yaml') and filecmp.cmp(this_directory+'/config/default.yaml', '/opt/ddcontroller/config/default.yaml'):
